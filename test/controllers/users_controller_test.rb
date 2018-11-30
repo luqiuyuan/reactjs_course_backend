@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionDispatch::IntegrationTest
+
+  # ==========================
+  # Action create
+  # ==========================
   
   test "should create model" do
     post users_url, params: { user: { email: "test@bigfish.com", password: "AbCdEf", name: "Wang Chongyang", avatar_url: "http://www.google.com", description: "Guess we can!" } }
@@ -34,6 +38,22 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
     assert hash_included_array_unordered([{ code: 'duplicated_field', field: 'user:email' }], json_response['errors'])
+  end
+
+  # ==========================
+  # Action update
+  # ==========================
+
+  test "should update model" do
+    patch users_url + "/" + users(:guojing).id.to_s, params: { user: { email: "updated@bigfish.com", password: "123456Cd", name: "Show Me the Change", avatar_url: "http://www.updated_avatar.com", description: "updated description" } }
+
+    assert_response :ok
+  end
+
+  test "should not update model with invalid id" do
+    patch users_url + "/1234567"
+
+    assert_response :not_found
   end
 
 end
