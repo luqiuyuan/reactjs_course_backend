@@ -29,4 +29,11 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert hash_included_array_unordered([{ code: 'invalid_field', field: 'user:email' }], json_response['errors'])
   end
 
+  test "should not create model with duplicated email" do
+    post users_url, params: { user: { email: users(:guojing).email, password: "AbCdEf", name: "Wang Chongyang", avatar_url: "http://www.google.com", description: "Guess we can!" } }
+
+    assert_response :bad_request
+    assert hash_included_array_unordered([{ code: 'duplicated_field', field: 'user:email' }], json_response['errors'])
+  end
+
 end

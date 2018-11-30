@@ -25,6 +25,11 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
   end
 
+  test "model with duplicated email should not be valid" do
+    @user.email = users(:guojing).email
+    assert_not @user.valid?
+  end
+
   test "model without password should not be valid" do
     @user.password = nil
     assert_not @user.valid?
