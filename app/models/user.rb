@@ -12,6 +12,8 @@ class User < ApplicationRecord
   PASSWORD_LENGTH_MIN = 6
   PASSWORD_LENGTH_MAX = 50
   NAME_LENGTH_MAX = 50
+  AVATAR_URL_LENGTH_MAX = 2000
+  DESCRIPTION_LENGTH_MAX = 60
 
   # ==========================
   # Validations
@@ -23,6 +25,8 @@ class User < ApplicationRecord
   validates :password, allow_nil: true, length: {minimum: PASSWORD_LENGTH_MIN, maximum: PASSWORD_LENGTH_MAX}, on: :update
   validate :password_validation
   validates :name, length: {maximum: NAME_LENGTH_MAX}
+  validates :avatar_url, length: {maximum: AVATAR_URL_LENGTH_MAX}
+  validates :description, length: {maximum: DESCRIPTION_LENGTH_MAX}
 
   # ==========================
   # Custom Validations

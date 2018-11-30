@@ -3,7 +3,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
 
   def setup
-    @user = User.new(email: "test@bigfish.com", password: "123456aA", name: "Mr. Somebody")
+    @user = User.new(email: "test@bigfish.com", password: "123456aA", name: "Mr. Somebody", avatar_url: "http://www.baidu.com", description: "Call me maybe")
   end
 
   test "valid model should ba valid" do
@@ -75,6 +75,26 @@ class UserTest < ActiveSupport::TestCase
     user = users(:guojing)
     user.password = "a" * (User::PASSWORD_LENGTH_MIN - 1)
     assert_not user.valid?
+  end
+
+  test "model without avatar_url should be valid" do
+    @user.avatar_url = nil
+    assert @user.valid?
+  end
+
+  test "model with avatar_url that is too long should not be valid" do
+    @user.avatar_url = "a" * (User::AVATAR_URL_LENGTH_MAX + 1)
+    assert_not @user.valid?
+  end
+
+  test "model without description should be valid" do
+    @user.description = nil
+    assert @user.valid?
+  end
+
+  test "model with description that is too long should not be valid" do
+    @user.description = "a" * (User::DESCRIPTION_LENGTH_MAX + 1)
+    assert_not @user.valid?
   end
 
 end

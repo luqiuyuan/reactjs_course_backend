@@ -3,7 +3,7 @@ require 'test_helper'
 class UsersControllerTest < ActionDispatch::IntegrationTest
   
   test "should create model" do
-    post users_url, params: { user: { email: "test@bigfish.com", password: "AbCdEf", name: "Wang Chongyang" } }
+    post users_url, params: { user: { email: "test@bigfish.com", password: "AbCdEf", name: "Wang Chongyang", avatar_url: "http://www.google.com", description: "Guess we can!" } }
 
     assert_response :created
   end
