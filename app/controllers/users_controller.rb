@@ -1,6 +1,11 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:show, :update]
+
+  # GET /users/:id
+  def show
+    render json: { user: @user }, status: :ok
+  end
 
   # POST /users
   def create

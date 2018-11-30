@@ -3,6 +3,16 @@ require 'test_helper'
 class UsersControllerTest < ActionDispatch::IntegrationTest
 
   # ==========================
+  # Action show
+  # ==========================
+
+  test "should show model" do
+    get users_url + "/" + users(:guojing).id.to_s
+
+    assert_response :ok
+  end
+
+  # ==========================
   # Action create
   # ==========================
   
