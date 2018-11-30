@@ -43,4 +43,16 @@ class ApplicationController < ActionController::API
       errors
     end
 
+    # Add prefix to field to let the field displayed have multiple levels
+    #
+    # @param [Array[Error]] errors
+    # @param [String] prefix
+    def add_prefix_to_field(errors, prefix)
+      errors.each do |e|
+        if e.field
+          e.field = prefix + e.field.to_s
+        end
+      end
+    end
+
 end
