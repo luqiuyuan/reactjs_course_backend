@@ -45,6 +45,25 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ==========================
+  # View SHOW
+  # ==========================
+
+  test "should show view SHOW" do
+    post questions_url, headers: login_as(:guojing), params: { question: { title: "New Title" } };
+
+    assert_response :created
+    assert hash_included_unordered({
+      question: {
+        id: Question.last.id,
+        title: "New Title",
+        user_id: users(:guojing).id,
+        created_at: Question.last.created_at.as_json,
+        updated_at: Question.last.updated_at.as_json
+      }
+    }, json_response)
+  end
+
+  # ==========================
   # View INDEX
   # ==========================
 
