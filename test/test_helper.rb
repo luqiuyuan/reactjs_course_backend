@@ -146,7 +146,7 @@ class ActiveSupport::TestCase
     user = users(user_symbol)
     user_token = UserToken.new(user)
     user_token.save
-    @request.headers['Authorization'] = '{"user_token":{"user_id":"' + user.id.to_s + '", "key":"' + user_token.key + '"}}'
+    return { Authorization: '{"user_token":{"user_id":"' + user.id.to_s + '", "key":"' + user_token.key + '"}}' }
   end
 
 end

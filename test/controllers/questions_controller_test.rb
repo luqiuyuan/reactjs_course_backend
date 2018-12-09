@@ -7,7 +7,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should show models" do
-    get questions_url
+    get questions_url, headers: login_as(:guojing)
 
     assert_response :ok
   end
@@ -15,7 +15,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   test "should return 404" do
     Question.destroy_all
 
-    get questions_url
+    get questions_url, headers: login_as(:guojing)
 
     assert_response :not_found
   end
@@ -25,7 +25,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should show view INDEX" do
-    get questions_url
+    get questions_url, headers: login_as(:guojing)
 
     assert_response :ok
     assert hash_included_array_unordered([

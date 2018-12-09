@@ -1,5 +1,7 @@
 class QuestionsController < ApplicationController
 
+  before_action :authenticate_user_token, only: [:index, :create]
+
   # GET /questions
   def index
     @questions = Question.all
