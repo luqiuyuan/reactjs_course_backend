@@ -97,4 +97,14 @@ class ApplicationController < ActionController::API
       end
     end
 
+    def set_user_logged_in
+      # If no logged-in user, user_token return nil
+      if user_token.nil?
+        @user_logged_in = nil
+        return
+      end
+
+      @user_logged_in = User.find(user_token['user_id'])
+    end
+
 end

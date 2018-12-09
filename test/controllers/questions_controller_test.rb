@@ -21,6 +21,30 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ==========================
+  # Action create
+  # ==========================
+
+  test "should create model" do
+    post questions_url, headers: login_as(:guojing), params: { question: { title: "New Title" } };
+
+    assert_response :created
+  end
+
+  test "should not create model without question" do
+    post questions_url, headers: login_as(:guojing)
+
+    assert_response :bad_request
+    assert hash_included_array_unordered([{ code: "missing_field", field: "question" }], json_response['errors'])
+  end
+
+  test "should not create model with invalid question:title" do
+    post questions_url, headers: login_as(:guojing), params: { question: { title: "a" * (Question::TITLE_LENGTH_MAX + 1) } };
+
+    assert_response :bad_request
+    assert hash_included_array_unordered([{ code: "invalid_field", field: "question:title" }], json_response['errors'])
+  end
+
+  # ==========================
   # View INDEX
   # ==========================
 
