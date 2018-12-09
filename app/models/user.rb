@@ -43,6 +43,12 @@ class User < ApplicationRecord
       self.errors.add(:password, :should_contain_upcase)
     end
   end
+
+  # ==========================
+  # Associations
+  # ==========================
+
+  has_many :questions
   
   # ==========================
   # Callbacks
