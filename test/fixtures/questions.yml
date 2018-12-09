@@ -1,7 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  title: MyString
+  title: Title of One
+  user: guojing
+  created_at: 2018-12-09 12:00:00
+  updated_at: 2018-12-09 12:00:00
 
 two:
-  title: MyString
+  title: Title of Two
+  user: guojing
+  created_at: 2018-12-10 18:00:00
+  updated_at: 2018-12-10 18:00:00

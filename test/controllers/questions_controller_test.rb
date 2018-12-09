@@ -1,38 +1,49 @@
 require 'test_helper'
 
 class QuestionsControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @question = questions(:one)
+
+  # ==========================
+  # Action show
+  # ==========================
+
+  test "should show models" do
+    get questions_url
+
+    assert_response :ok
   end
 
-  test "should get index" do
-    get questions_url, as: :json
-    assert_response :success
+  test "should return 404" do
+    Question.destroy_all
+
+    get questions_url
+
+    assert_response :not_found
   end
 
-  test "should create question" do
-    assert_difference('Question.count') do
-      post questions_url, params: { question: { title: @question.title } }, as: :json
-    end
+  # ==========================
+  # View INDEX
+  # ==========================
 
-    assert_response 201
+  test "should show view INDEX" do
+    get questions_url
+
+    assert_response :ok
+    assert hash_included_array_unordered([
+      {
+        id: questions(:one).id,
+        title: questions(:one).title,
+        user_id: users(:guojing).id,
+        created_at: questions(:one).created_at.as_json,
+        updated_at: questions(:one).updated_at.as_json
+      },
+      {
+        id: questions(:two).id,
+        title: questions(:two).title,
+        user_id: users(:guojing).id,
+        created_at: questions(:two).created_at.as_json,
+        updated_at: questions(:two).updated_at.as_json
+      }
+    ], json_response['questions'])
   end
 
-  test "should show question" do
-    get question_url(@question), as: :json
-    assert_response :success
-  end
-
-  test "should update question" do
-    patch question_url(@question), params: { question: { title: @question.title } }, as: :json
-    assert_response 200
-  end
-
-  test "should destroy question" do
-    assert_difference('Question.count', -1) do
-      delete question_url(@question), as: :json
-    end
-
-    assert_response 204
-  end
 end

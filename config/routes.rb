@@ -4,6 +4,6 @@ Rails.application.routes.draw do
 
   resources :user_tokens, only: [:create]
 
-  resources :questions
+  resources :questions, only: [:index]
   
 end
