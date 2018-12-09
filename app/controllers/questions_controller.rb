@@ -34,7 +34,7 @@ class QuestionsController < ApplicationController
 
     # Strong parameter of model Question
     def question_params
-      params.require(:question).permit(:title)
+      params.require(:question).permit(:title, :content)
     end
 
 end

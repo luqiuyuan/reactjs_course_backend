@@ -5,12 +5,14 @@ class Question < ApplicationRecord
   # ==========================
 
   TITLE_LENGTH_MAX = 255
+  CONTENT_LENGTH_MAX = 65535
 
   # ==========================
   # Validations
   # ==========================
 
   validates :title, presence: true, length: {maximum: TITLE_LENGTH_MAX}
+  validates :content, length: {maximum: CONTENT_LENGTH_MAX}
   validates :user, presence: true
 
   # ==========================

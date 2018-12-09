@@ -3,7 +3,7 @@ require 'test_helper'
 class QuestionTest < ActiveSupport::TestCase
 
   def setup
-    @question = Question.new(title: "new title", user: users(:guojing))
+    @question = Question.new(title: "New Title", content: "New Content", user: users(:guojing))
   end
 
   test "valid model should be valid" do
@@ -17,6 +17,16 @@ class QuestionTest < ActiveSupport::TestCase
 
   test "model with title that is too long should not be valid" do
     @question.title = "a" * (Question::TITLE_LENGTH_MAX + 1)
+    assert_not @question.valid?
+  end
+
+  test "model without content should be valid" do
+    @question.content = nil
+    assert @question.valid?
+  end
+
+  test "model with content that is too long should not be valid" do
+    @question.content = "a" * (Question::CONTENT_LENGTH_MAX + 1)
     assert_not @question.valid?
   end
 

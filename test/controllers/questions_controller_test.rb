@@ -25,7 +25,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should create model" do
-    post questions_url, headers: login_as(:guojing), params: { question: { title: "New Title" } };
+    post questions_url, headers: login_as(:guojing), params: { question: { title: "New Title", content: "New Content" } };
 
     assert_response :created
   end
@@ -38,7 +38,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not create model with invalid question:title" do
-    post questions_url, headers: login_as(:guojing), params: { question: { title: "a" * (Question::TITLE_LENGTH_MAX + 1) } };
+    post questions_url, headers: login_as(:guojing), params: { question: { title: "a" * (Question::TITLE_LENGTH_MAX + 1), content: "New Content" } };
 
     assert_response :bad_request
     assert hash_included_array_unordered([{ code: "invalid_field", field: "question:title" }], json_response['errors'])
@@ -49,13 +49,14 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should show view SHOW" do
-    post questions_url, headers: login_as(:guojing), params: { question: { title: "New Title" } };
+    post questions_url, headers: login_as(:guojing), params: { question: { title: "New Title", content: "New Content" } };
 
     assert_response :created
     assert hash_included_unordered({
       question: {
         id: Question.last.id,
         title: "New Title",
+        content: "New Content",
         user_id: users(:guojing).id,
         created_at: Question.last.created_at.as_json,
         updated_at: Question.last.updated_at.as_json
@@ -75,6 +76,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
       {
         id: questions(:one).id,
         title: questions(:one).title,
+        content: questions(:one).content,
         user_id: users(:guojing).id,
         created_at: questions(:one).created_at.as_json,
         updated_at: questions(:one).updated_at.as_json
@@ -82,6 +84,7 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
       {
         id: questions(:two).id,
         title: questions(:two).title,
+        content: questions(:two).content,
         user_id: users(:guojing).id,
         created_at: questions(:two).created_at.as_json,
         updated_at: questions(:two).updated_at.as_json
