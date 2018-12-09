@@ -3,7 +3,7 @@ require 'test_helper'
 class QuestionsControllerTest < ActionDispatch::IntegrationTest
 
   # ==========================
-  # Action show
+  # Action index
   # ==========================
 
   test "should show models" do

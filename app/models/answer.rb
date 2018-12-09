@@ -4,7 +4,7 @@ class Answer < ApplicationRecord
   # Constants
   # ==========================
 
-  CONTENT_LENGTH_MAX = 255
+  CONTENT_LENGTH_MAX = 65535
 
   # ==========================
   # Validations
