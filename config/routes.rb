@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :user_tokens, only: [:create]
 
-  resources :questions, only: [:index]
+  resources :questions, only: [:index, :create]
+
+  get 'authentication_testing/authenticate', to:'authentication_testing#authenticate'
   
 end

@@ -55,4 +55,46 @@ class ApplicationController < ActionController::API
       end
     end
 
+    # Get user token parameters
+    #
+    # @return [Hash] if succeeded, nil if failed
+    #
+    # Comment:
+    # 1. The method ActiveSupport::JSON.decode will be called only once no matter how many times the method user_token is called, since the resulting Hash will be stored in an instance variable
+    # 2. The key-value pairs "user_id" and "key" might not exist
+    #
+    # Example:
+    # {"user_id" => 1, "key" => "key"}
+    # {"user_id" => 2}
+    # {}
+    #
+    # Usage:
+    # user_token['user_id']
+    def user_token
+      if @user_token
+        return @user_token
+      else
+        if request.headers['HTTP_AUTHORIZATION']
+          return @user_token = (ActiveSupport::JSON.decode request.headers['HTTP_AUTHORIZATION'])['user_token']
+        end
+      end
+    end
+
+    # Authenticate user token
+    def authenticate_user_token
+      if user_token && user_token['user_id'] && user_token['key']
+        if !UserToken.authenticate(user_token['user_id'], user_token['key'])
+          @errors = []
+          @errors << Error.new("invalid_user_token")
+          render json: { errors: @errors }, status: :bad_request
+        else # if user token authentication succeeded, refresh the token automatically
+          UserToken.refresh(user_token['user_id'], user_token['key'])
+        end
+      else
+        @errors = []
+        @errors << Error.new("invalid_user_token")
+        render json: { errors: @errors }, status: :bad_request
+      end
+    end
+
 end

@@ -141,4 +141,12 @@ class ActiveSupport::TestCase
     return true # every thing is fine...
   end
 
+  def login_as(user_symbol)
+    # Setup user token
+    user = users(user_symbol)
+    user_token = UserToken.new(user)
+    user_token.save
+    @request.headers['Authorization'] = '{"user_token":{"user_id":"' + user.id.to_s + '", "key":"' + user_token.key + '"}}'
+  end
+
 end

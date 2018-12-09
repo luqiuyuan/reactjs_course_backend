@@ -49,8 +49,6 @@ class UserToken
   # @param String key
   #
   # @return [Boolean] true if authenticated successfully, false if not
-  #
-  # @raise ActiveRecord::RecordNotFound if user with user_id does not exist
   def UserToken.authenticate(user_id, key)
     user = User.find(user_id)
     value = $redis.get(UserToken.digest(key, user.email))
@@ -59,6 +57,8 @@ class UserToken
     else
       return false
     end
+  rescue ActiveRecord::RecordNotFound
+    return false
   end
 
   # Refresh user token
