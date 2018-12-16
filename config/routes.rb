@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :likes
   resources :users, only: [:show, :create, :update]
 
   resources :user_tokens, only: [:create]
