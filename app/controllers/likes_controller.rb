@@ -1,51 +1,22 @@
 class LikesController < ApplicationController
-  before_action :set_like, only: [:show, :update, :destroy]
 
-  # GET /likes
-  def index
-    @likes = Like.all
+  before_action :set_question, only: [:create, :destroy]
+  before_action :set_like, only: [:create, :destroy]
 
-    render json: @likes
-  end
-
-  # GET /likes/1
-  def show
-    render json: @like
-  end
-
-  # POST /likes
+  # POST /questions/:question_id/like
   def create
-    @like = Like.new(like_params)
+    @like = Like.new()
 
-    if @like.save
-      render json: @like, status: :created, location: @like
-    else
-      render json: @like.errors, status: :unprocessable_entity
-    end
+    # if @like.save
+    #   render json: @like, status: :created, location: @like
+    # else
+    #   render json: @like.errors, status: :unprocessable_entity
+    # end
   end
 
-  # PATCH/PUT /likes/1
-  def update
-    if @like.update(like_params)
-      render json: @like
-    else
-      render json: @like.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /likes/1
+  # DELETE /questions/:question_id/like
   def destroy
-    @like.destroy
+    # @like.destroy
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_like
-      @like = Like.find(params[:id])
-    end
-
-    # Only allow a trusted parameter "white list" through.
-    def like_params
-      params.fetch(:like, {})
-    end
 end
