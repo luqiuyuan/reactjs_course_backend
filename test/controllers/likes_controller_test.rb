@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class LikesControllerTest < ActionDispatch::IntegrationTest
+
+  # ==========================
+  # Action create
+  # ==========================
   
   test "should create like if not exist" do
     post question_like_url(questions(:two)), headers: login_as(:guojing)
@@ -8,7 +12,7 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
     assert_response :created
   end
 
-  test "should not create like if exist" do
+  test "should not create like if exists" do
     post question_like_url(questions(:one)), headers: login_as(:guojing)
 
     assert_response :bad_request
@@ -24,6 +28,28 @@ class LikesControllerTest < ActionDispatch::IntegrationTest
 
   test "should not like a non-existent question" do
     post question_like_url(1234567), headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  # ==========================
+  # Action destroy
+  # ==========================
+
+  test "should destroy if exists" do
+    delete question_like_url(questions(:one)), headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should not destroy if not exist" do
+    delete question_like_url(questions(:two)), headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  test "should not destroy a like of a non-existent question" do
+    delete question_like_url(1234567), headers: login_as(:guojing)
 
     assert_response :not_found
   end

@@ -1,5 +1,6 @@
 class LikesController < ApplicationController
 
+  before_action :authenticate_user_token, only: [:create, :destroy]
   before_action :set_user_logged_in, only: [:create, :destroy]
   before_action :set_question, only: [:create, :destroy]
 
@@ -17,7 +18,11 @@ class LikesController < ApplicationController
 
   # DELETE /questions/:question_id/like
   def destroy
-    @like = Like.find_by(user: @user_logged_in, likable: @question)
+    @like = Like.find_by!(user: @user_logged_in, likable: @question)
+
+    @like.destroy
+
+    render json: { like: @like }, status: :ok
   rescue ActiveRecord::RecordNotFound
     render status: :not_found
   end
