@@ -71,11 +71,11 @@ class ApplicationController < ActionController::API
     # Usage:
     # user_token['user_id']
     def user_token
-      if @user_token
-        return @user_token
+      if @user_token_internal
+        return @user_token_internal
       else
         if request.headers['HTTP_AUTHORIZATION']
-          return @user_token = (ActiveSupport::JSON.decode request.headers['HTTP_AUTHORIZATION'])['user_token']
+          return @user_token_internal = (ActiveSupport::JSON.decode request.headers['HTTP_AUTHORIZATION'])['user_token']
         end
       end
     end

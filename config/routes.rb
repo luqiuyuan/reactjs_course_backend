@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :create, :update]
 
   resources :user_tokens, only: [:create]
+  resource :user_token, only: [:destroy]
 
   resources :questions, only: [:index, :create] do
     resources :answers, only: [:index, :create]

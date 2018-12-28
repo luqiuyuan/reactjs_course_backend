@@ -2,7 +2,7 @@ class UserToken
 
   include ActiveModel::Validations
 
-  attr_reader :user_id, :key, :expire_in
+  attr_accessor :user_id, :key, :expire_in
 
   # Define constants
   BASE64_N = 64
@@ -27,6 +27,14 @@ class UserToken
   	# Setup in Redis database
     $redis.set(UserToken.digest(key, user_email), user_id, ex:expire_in)
     return true
+  end
+
+  def UserToken.find(user_id, key)
+    user = User.find(user_id)
+    user_token = UserToken.new user
+    user_token.key = key
+    user_token.expire_in = $redis.ttl(UserToken.digest(key, user.email))
+    return user_token
   end
 
   # Delete the user token
@@ -84,7 +92,6 @@ class UserToken
 
   private
 
-    attr_writer :user_id, :key, :expire_in
     attr_accessor :user_email
 
     validates :user_id, presence: true

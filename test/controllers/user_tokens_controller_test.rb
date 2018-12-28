@@ -2,6 +2,10 @@ require 'test_helper'
 
 class UserTokensControllerTest < ActionDispatch::IntegrationTest
 
+  # ==========================
+  # Action create
+  # ==========================
+
   test "should create user token" do
     post user_tokens_url, params: { credential: { email: users(:guojing).email, password: "guojing password" } }
 
@@ -26,6 +30,16 @@ class UserTokensControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
     assert hash_included_array_unordered([{ code: 'missing_field', field: 'credential:email' }], json_response['errors'])
+  end
+
+  # ==========================
+  # Action destroy
+  # ==========================
+
+  test "should destroy" do
+    delete user_token_url, headers: login_as(:guojing)
+
+    assert_response :ok
   end
 
 end

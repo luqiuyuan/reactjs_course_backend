@@ -1,5 +1,8 @@
 class UserTokensController < ApplicationController
 
+  before_action :authenticate_user_token, only: [:destroy]
+
+  # POST user_tokens
   def create
     @errors = []
     if !validate_credential_params(params, @errors)
@@ -15,6 +18,15 @@ class UserTokensController < ApplicationController
         render json: { errors: @errors }, status: :bad_request
       end
     end
+  end
+
+  # DELETE user_token
+  def destroy
+    @user_token = UserToken.find(user_token['user_id'], user_token['key'])
+
+    UserToken.del(user_token['user_id'], user_token['key'])
+
+    render json: { user_token: @user_token }, status: :ok
   end
 
   private
