@@ -123,4 +123,39 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     )
   end
 
+  # ==========================
+  # View INDEX
+  # ==========================
+
+  test "should show view INDEX" do
+    get users_url
+
+    assert_response :ok
+    assert hash_included_unordered(
+      {
+        users: [
+          {
+            id: users(:guojing).id,
+            email: users(:guojing).email,
+            name: users(:guojing).name,
+            avatar_url: users(:guojing).avatar_url,
+            description: users(:guojing).description,
+            created_at: users(:guojing).created_at.as_json,
+            updated_at: users(:guojing).updated_at.as_json
+          },
+          {
+            id: users(:huangrong).id,
+            email: users(:huangrong).email,
+            name: users(:huangrong).name,
+            avatar_url: users(:huangrong).avatar_url,
+            description: users(:huangrong).description,
+            created_at: users(:huangrong).created_at.as_json,
+            updated_at: users(:huangrong).updated_at.as_json
+          }
+        ]
+      },
+      json_response
+    )
+  end
+
 end
