@@ -2,6 +2,17 @@ class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :update]
 
+  # GET /users
+  def index
+    @users = User.all
+    
+    if @users.empty?
+      render status: :not_found
+    else
+      render json: { users: @users }, status: :ok
+    end
+  end
+
   # GET /users/:id
   def show
     render json: { user: @user }, status: :ok

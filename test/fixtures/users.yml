@@ -4,3 +4,11 @@ guojing:
   email: guojing@bigfish.com
   password_digest: <%= User.digest("guojing password") %>
   name: Guo Jing
+  avatar_url: http://www.somewebsite.com/somepicture
+  description: Guo Jing aka Jing gege
+
+huangrong:
+  email: huangrong@bigfish.com
+  password_digest: <%= User.digest("huangrong password") %>
+  name: Huang Rong
+  description: Huang Rong aka Ronger

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :users, only: [:show, :create, :update]
+  resources :users, only: [:index, :show, :create, :update]
 
   resources :user_tokens, only: [:create]
   resource :user_token, only: [:destroy]

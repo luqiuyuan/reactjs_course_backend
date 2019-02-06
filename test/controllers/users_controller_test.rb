@@ -3,6 +3,33 @@ require 'test_helper'
 class UsersControllerTest < ActionDispatch::IntegrationTest
 
   # ==========================
+  # Action index
+  # ==========================
+
+  test "should show models" do
+    get users_url
+
+    assert_response :ok
+    assert hash_included_unordered(
+      {
+        users: [
+          { id: users(:guojing).id },
+          { id: users(:huangrong).id }
+        ]
+      },
+      json_response
+    )
+  end
+
+  test "should not show models" do
+    User.destroy_all
+
+    get users_url
+
+    assert_response :not_found
+  end
+
+  # ==========================
   # Action show
   # ==========================
 
@@ -10,6 +37,12 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     get users_url + "/" + users(:guojing).id.to_s
 
     assert_response :ok
+  end
+
+  test "should not show model" do
+    get users_url + "/1234567"
+
+    assert_response :not_found
   end
 
   # ==========================
@@ -64,6 +97,30 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     patch users_url + "/1234567"
 
     assert_response :not_found
+  end
+
+  # ==========================
+  # View SHOW
+  # ==========================
+
+  test "should show view SHOW" do
+    get users_url + "/" + users(:guojing).id.to_s
+
+    assert_response :ok
+    assert hash_included_unordered(
+      {
+        user: {
+          id: users(:guojing).id,
+          email: users(:guojing).email,
+          name: users(:guojing).name,
+          avatar_url: users(:guojing).avatar_url,
+          description: users(:guojing).description,
+          created_at: users(:guojing).created_at.as_json,
+          updated_at: users(:guojing).updated_at.as_json
+        }
+      },
+      json_response
+    )
   end
 
 end
