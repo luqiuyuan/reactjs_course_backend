@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
 
-  before_action :authenticate_user_token, only: [:index, :create]
+  before_action :authenticate_user_token, only: [:create]
   before_action :set_user_logged_in, only: [:create]
 
   # GET /questions
