@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
 
-  before_action :authenticate_user_token, only: [:index, :show, :create, :update, :destroy]
+  before_action :authenticate_user_token, only: [:create, :update, :destroy]
   before_action :set_user_logged_in, only: [:create, :update, :destroy]
   before_action :set_question, only: [:show, :update, :destroy]
   before_action :validate_access, only: [:update, :destroy]

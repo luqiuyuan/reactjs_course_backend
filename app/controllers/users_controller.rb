@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :authenticate_user_token, only: [:index, :show, :update, :destroy]
+  before_action :authenticate_user_token, only: [:update, :destroy]
   before_action :set_user_logged_in, only: [:show, :update, :destroy]
   before_action :set_user, only: [:show]
 
