@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:show, :update]
+  before_action :authenticate_user_token, only: [:index, :show, :update, :destroy]
+  before_action :set_user_logged_in, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:show]
 
   # GET /users
   def index
@@ -37,13 +39,19 @@ class UsersController < ApplicationController
   # PATCH /users/:id
   # PUT /users/:id
   def update
-    if @user.update(user_params)
-      render json: { user: @user }, status: :ok
+    if @user_logged_in.update(user_params)
+      render json: { user: @user_logged_in }, status: :ok
     else
-      @errors = translateModelErrors @user
+      @errors = translateModelErrors @user_logged_in
       add_prefix_to_field @errors, "user:"
       render json: { errors: @errors }, status: :bad_request
     end
+  end
+
+  # DELETE
+  def destroy
+    @user_logged_in.destroy
+    render json: { user: @user_logged_in }, status: :ok
   end
 
   private
@@ -55,7 +63,14 @@ class UsersController < ApplicationController
 
     # Setup @user from parameter id
     def set_user
-      @user = User.find(params[:id])
+      uri = request.env['PATH_INFO']
+      resource = uri.split('/')[1]
+
+      if resource == 'user' and !@user_logged_in.blank?
+        @user = @user_logged_in
+      else
+        @user = User.find(params[:id])
+      end
     rescue ActiveRecord::RecordNotFound
       render status: :not_found
     end

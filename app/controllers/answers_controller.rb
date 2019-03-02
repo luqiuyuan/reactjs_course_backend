@@ -1,18 +1,25 @@
 class AnswersController < ApplicationController
 
-  before_action :authenticate_user_token, only: [:create]
+  before_action :authenticate_user_token, only: [:index, :show, :create, :update, :destroy]
   before_action :set_question, only: [:index, :create]
-  before_action :set_user_logged_in, only: [:create]
+  before_action :set_answer, only: [:show, :update, :destroy]
+  before_action :set_user_logged_in, only: [:create, :update, :destroy]
+  before_action :validate_access, only: [:update, :destroy]
 
   # GET questions/:id/answers
   def index
     @answers = @question.answers
 
     if !@answers.empty?
-      render json: { answers: @answers }, status: :ok
+      render json: { answers: view_index(@answers) }, status: :ok
     else
       render status: :not_found
     end
+  end
+
+  # GET answers/:id
+  def show
+    render json: { answer: view_show(@answer) }, status: :ok
   end
 
   # POST questions/:id/answers
@@ -21,7 +28,7 @@ class AnswersController < ApplicationController
     @answer.question = @question
     @answer.user = @user_logged_in
     if @answer.save
-      render json: { answer: @answer }, status: :created
+      render json: { answer: view_show(@answer) }, status: :created
     else
       @errors = translateModelErrors @answer
       add_prefix_to_field @errors, "answer:"
@@ -32,6 +39,24 @@ class AnswersController < ApplicationController
     render json: { errors: @errors }, status: :bad_request
   end
 
+  # PATCH /answers/:id
+  # PUT /answers/:id
+  def update
+    if @answer.update(answer_params)
+      render json: { answer: view_show(@answer) }, status: :ok
+    else
+      @errors = translateModelErrors @question
+      add_prefix_to_field @errors, "answer:"
+      render json: { errors: @errors }, status: :bad_request
+    end
+  end
+
+  # DELETE /answers/:id
+  def destroy
+    @answer.destroy
+    render json: { answer: view_show(@answer) }, status: :ok
+  end
+
   private
 
     def set_question
@@ -40,9 +65,50 @@ class AnswersController < ApplicationController
       render status: :not_found
     end
 
+    def set_answer
+      @answer = Answer.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render status: :not_found
+    end
+
     # Strong parameter of model Answer
     def answer_params
       params.require(:answer).permit(:content)
+    end
+
+    # Check if the logged-in user has access to the answer
+    def validate_access
+      if @user_logged_in != @answer.user
+        render status: :forbidden
+      end
+    end
+
+    def view_index(answers)
+      answers_view = []
+      answers.each do |answer|
+        answers_view.push({
+          id: answer.id,
+          content: answer.content,
+          question_id: answer.question_id,
+          user_id: answer.user_id,
+          created_at: answer.created_at,
+          updated_at: answer.updated_at,
+          number_of_likes: answer.likes.size
+        })
+      end
+      return answers_view
+    end
+
+    def view_show(answer)
+      return {
+        id: answer.id,
+        content: answer.content,
+        question_id: answer.question_id,
+        user_id: answer.user_id,
+        created_at: answer.created_at,
+        updated_at: answer.updated_at,
+        number_of_likes: answer.likes.size
+      }
     end
 
 end

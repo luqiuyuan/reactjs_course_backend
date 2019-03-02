@@ -21,6 +21,22 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ==========================
+  # Action show
+  # ==========================
+
+  test "should show model" do
+    get questions_url + "/" + questions(:one).id.to_s, headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should return 404 for show" do
+    get questions_url + "/1234567", headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  # ==========================
   # Action create
   # ==========================
 
@@ -45,6 +61,50 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ==========================
+  # Action update
+  # ==========================
+
+  test "should update model" do
+    patch questions_url + "/" + questions(:one).id.to_s, params: { question: { title: "New Title" } }, headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should return 404 for update" do
+    patch questions_url + "/1234567", params: { question: { title: "New Title" } }, headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  test "should return 403" do
+    patch questions_url + "/" + questions(:one).id.to_s, params: { question: { title: "New Title" } }, headers: login_as(:huangrong)
+
+    assert_response :forbidden
+  end
+
+  # ==========================
+  # Action destroy
+  # ==========================
+
+  test "should destroy model" do
+    delete questions_url + "/" + questions(:one).id.to_s, headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should return 404 for destroy" do
+    delete questions_url + "/1234567", headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  test "should return 403 for destroy" do
+    patch questions_url + "/" + questions(:one).id.to_s, headers: login_as(:huangrong)
+
+    assert_response :forbidden
+  end
+
+  # ==========================
   # View SHOW
   # ==========================
 
@@ -59,7 +119,8 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
         content: "New Content",
         user_id: users(:guojing).id,
         created_at: Question.last.created_at.as_json,
-        updated_at: Question.last.updated_at.as_json
+        updated_at: Question.last.updated_at.as_json,
+        number_of_likes: Question.last.likes.size
       }
     }, json_response)
   end
@@ -79,7 +140,8 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
         content: questions(:one).content,
         user_id: users(:guojing).id,
         created_at: questions(:one).created_at.as_json,
-        updated_at: questions(:one).updated_at.as_json
+        updated_at: questions(:one).updated_at.as_json,
+        number_of_likes: questions(:one).likes.size
       },
       {
         id: questions(:two).id,
@@ -87,7 +149,8 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
         content: questions(:two).content,
         user_id: users(:guojing).id,
         created_at: questions(:two).created_at.as_json,
-        updated_at: questions(:two).updated_at.as_json
+        updated_at: questions(:two).updated_at.as_json,
+        number_of_likes: questions(:two).likes.size
       }
     ], json_response['questions'])
   end

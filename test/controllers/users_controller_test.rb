@@ -7,7 +7,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should show models" do
-    get users_url
+    get users_url, headers: login_as(:guojing)
 
     assert_response :ok
     assert hash_included_unordered(
@@ -21,28 +21,26 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     )
   end
 
-  test "should not show models" do
-    User.destroy_all
-
-    get users_url
-
-    assert_response :not_found
-  end
-
   # ==========================
   # Action show
   # ==========================
 
   test "should show model" do
-    get users_url + "/" + users(:guojing).id.to_s
+    get users_url + "/" + users(:guojing).id.to_s, headers: login_as(:guojing)
 
     assert_response :ok
   end
 
   test "should not show model" do
-    get users_url + "/1234567"
+    get users_url + "/1234567", headers: login_as(:guojing)
 
     assert_response :not_found
+  end
+
+  test "should show model for singular resource" do
+    get user_url, headers: login_as(:guojing)
+
+    assert_response :ok
   end
 
   # ==========================
@@ -88,15 +86,19 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should update model" do
-    patch users_url + "/" + users(:guojing).id.to_s, params: { user: { email: "updated@bigfish.com", password: "123456Cd", name: "Show Me the Change", avatar_url: "http://www.updated_avatar.com", description: "updated description" } }
+    patch user_url, headers: login_as(:guojing), params: { user: { email: "updated@bigfish.com", password: "123456Cd", name: "Show Me the Change", avatar_url: "http://www.updated_avatar.com", description: "updated description" } }
 
     assert_response :ok
   end
 
-  test "should not update model with invalid id" do
-    patch users_url + "/1234567"
+  # ==========================
+  # Action destroy
+  # ==========================
 
-    assert_response :not_found
+  test "should destroy model" do
+    delete user_url, headers: login_as(:guojing)
+
+    assert_response :ok
   end
 
   # ==========================
@@ -104,7 +106,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should show view SHOW" do
-    get users_url + "/" + users(:guojing).id.to_s
+    get users_url + "/" + users(:guojing).id.to_s, headers: login_as(:guojing)
 
     assert_response :ok
     assert hash_included_unordered(
@@ -128,7 +130,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   # ==========================
 
   test "should show view INDEX" do
-    get users_url
+    get users_url, headers: login_as(:guojing)
 
     assert_response :ok
     assert hash_included_unordered(

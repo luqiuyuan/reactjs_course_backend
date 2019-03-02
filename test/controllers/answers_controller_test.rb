@@ -25,6 +25,22 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ==========================
+  # Action show
+  # ==========================
+
+  test "should show model" do
+    get base_url + "/answers/" + answers(:one).id.to_s, headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should return 404 for show" do
+    get base_url + "/answers" + "/1234567", headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  # ==========================
   # Action create
   # ==========================
 
@@ -63,6 +79,50 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ==========================
+  # Action update
+  # ==========================
+
+  test "should update model" do
+    patch base_url + "/answers/" + answers(:one).id.to_s, params: { answer: { content: "New Content" } }, headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should return 404 for update" do
+    patch base_url + "/answers" + "/1234567", params: { answer: { content: "New Content" } }, headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  test "should return 403" do
+    patch base_url + "/answers/" + answers(:one).id.to_s, params: { answer: { content: "New Content" } }, headers: login_as(:huangrong)
+
+    assert_response :forbidden
+  end
+
+  # ==========================
+  # Action destroy
+  # ==========================
+
+  test "should destroy model" do
+    delete base_url + "/answers/" + answers(:one).id.to_s, headers: login_as(:guojing)
+
+    assert_response :ok
+  end
+
+  test "should return 404 for destroy" do
+    delete base_url + "/answers" + "/1234567", headers: login_as(:guojing)
+
+    assert_response :not_found
+  end
+
+  test "should return 403 for destroy" do
+    delete base_url + "/answers/" + answers(:one).id.to_s, headers: login_as(:huangrong)
+
+    assert_response :forbidden
+  end
+
+  # ==========================
   # View SHOW
   # ==========================
 
@@ -77,7 +137,8 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
         question_id: questions(:one).id,
         user_id: users(:guojing).id,
         created_at: Answer.last.created_at.as_json,
-        updated_at: Answer.last.updated_at.as_json
+        updated_at: Answer.last.updated_at.as_json,
+        number_of_likes: Answer.last.likes.size
       }
     }, json_response)
   end
@@ -98,7 +159,8 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
           question_id: questions(:one).id,
           user_id: users(:guojing).id,
           created_at: answers(:one).created_at.as_json,
-          updated_at: answers(:one).updated_at.as_json
+          updated_at: answers(:one).updated_at.as_json,
+          number_of_likes: answers(:one).likes.size
         },
         {
           id: answers(:two).id,
@@ -106,10 +168,17 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
           question_id: questions(:one).id,
           user_id: users(:guojing).id,
           created_at: answers(:two).created_at.as_json,
-          updated_at: answers(:two).updated_at.as_json
+          updated_at: answers(:two).updated_at.as_json,
+          number_of_likes: answers(:two).likes.size
         }
       ]
     }, json_response)
   end
+
+  private
+
+    def base_url
+      return "http://www.example.com"
+    end
 
 end
