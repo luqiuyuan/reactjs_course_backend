@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions
   def index
-    @questions = Question.all
+    @questions = Question.all.order(created_at: :desc)
 
     if !@questions.empty?
       render json: { questions: view_index(@questions) }, status: :ok
