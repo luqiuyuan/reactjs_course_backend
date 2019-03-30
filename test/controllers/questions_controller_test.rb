@@ -155,4 +155,101 @@ class QuestionsControllerTest < ActionDispatch::IntegrationTest
     ], json_response['questions'])
   end
 
+  # ==========================
+  # Field liked in View SHOW
+  # ==========================
+
+  test "should show field liked as true in view show" do
+    get questions_url + "/" + questions(:one).id.to_s, headers: login_as(:guojing)
+
+    assert_response :ok
+    assert hash_included_unordered({
+      question: {
+        liked: true
+      }
+    }, json_response)
+  end
+
+  test "should show field liked as false in view show" do
+    get questions_url + "/" + questions(:one).id.to_s, headers: login_as(:huangrong)
+
+    assert_response :ok
+    assert hash_included_unordered({
+      question: {
+        liked: false
+      }
+    }, json_response)
+  end
+
+  test "should show field liked as false in view show 2" do
+    get questions_url + "/" + questions(:one).id.to_s
+
+    assert_response :ok
+    assert hash_included_unordered({
+      question: {
+        liked: false
+      }
+    }, json_response)
+  end
+
+  # ==========================
+  # Field liked in View INDEX
+  # ==========================
+
+  test "should show field liked view INDEX 1" do
+    get questions_url, headers: login_as(:guojing)
+
+    assert_response :ok
+    assert hash_included_array_unordered([
+      {
+        id: questions(:one).id,
+        title: questions(:one).title,
+        content: questions(:one).content,
+        user_id: users(:guojing).id,
+        created_at: questions(:one).created_at.as_json,
+        updated_at: questions(:one).updated_at.as_json,
+        number_of_likes: questions(:one).likes.size,
+        liked: true
+      },
+      {
+        id: questions(:two).id,
+        title: questions(:two).title,
+        content: questions(:two).content,
+        user_id: users(:guojing).id,
+        created_at: questions(:two).created_at.as_json,
+        updated_at: questions(:two).updated_at.as_json,
+        number_of_likes: questions(:two).likes.size,
+        liked: false
+      }
+    ], json_response['questions'])
+  end
+
+  test "should show field liked view INDEX 2" do
+    get questions_url
+
+    assert_response :ok
+    assert hash_included_array_unordered([
+      {
+        id: questions(:one).id,
+        title: questions(:one).title,
+        content: questions(:one).content,
+        user_id: users(:guojing).id,
+        created_at: questions(:one).created_at.as_json,
+        updated_at: questions(:one).updated_at.as_json,
+        number_of_likes: questions(:one).likes.size,
+        liked: false
+      },
+      {
+        id: questions(:two).id,
+        title: questions(:two).title,
+        content: questions(:two).content,
+        user_id: users(:guojing).id,
+        created_at: questions(:two).created_at.as_json,
+        updated_at: questions(:two).updated_at.as_json,
+        number_of_likes: questions(:two).likes.size,
+        liked: false
+      }
+    ], json_response['questions'])
+  end
+
 end
