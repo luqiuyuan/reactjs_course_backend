@@ -19,7 +19,7 @@ class User < ApplicationRecord
   # Validations
   # ==========================
 
-  validates :email, presence: true, length: {maximum: EMAIL_LENGTH_MAX}, uniqueness: true,
+  validates :email, presence: true, length: {maximum: EMAIL_LENGTH_MAX}, uniqueness: {case_sensitive: false},
                     format: {with: VALID_EMAIL_REGEX}
   validates :password, presence: true, length: {minimum: PASSWORD_LENGTH_MIN, maximum: PASSWORD_LENGTH_MAX}, on: :create
   validates :password, allow_nil: true, length: {minimum: PASSWORD_LENGTH_MIN, maximum: PASSWORD_LENGTH_MAX}, on: :update
