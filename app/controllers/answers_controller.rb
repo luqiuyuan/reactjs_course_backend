@@ -49,6 +49,9 @@ class AnswersController < ApplicationController
       add_prefix_to_field @errors, "answer:"
       render json: { errors: @errors }, status: :bad_request
     end
+  rescue ActionController::ParameterMissing
+    @errors = [Error.new('missing_field', 'answer')]
+    render json: { errors: @errors }, status: :bad_request
   end
 
   # DELETE /answers/:id
