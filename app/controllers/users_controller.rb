@@ -46,6 +46,9 @@ class UsersController < ApplicationController
       add_prefix_to_field @errors, "user:"
       render json: { errors: @errors }, status: :bad_request
     end
+  rescue ActionController::ParameterMissing
+    @errors = [Error.new('missing_field', 'user')]
+    render json: { errors: @errors }, status: :bad_request
   end
 
   # DELETE
